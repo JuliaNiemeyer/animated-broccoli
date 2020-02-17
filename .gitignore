@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+#ignorar:
+*.pdf
+/Mapas_base/
+
