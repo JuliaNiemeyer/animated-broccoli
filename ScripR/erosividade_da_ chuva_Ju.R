@@ -6,35 +6,31 @@
 
 library(raster)
 library(maptools)
-library (sp)
+library(sp)
 library(dplyr)
 library(rgdal)
 
 
 # carrega raster altitude TerraClass
-setwd("D:/RedeCLIMA/Maps/")
 
 
-alt_cerrado <- raster("./DEM_WorldClim/dem_BSF_FILL.tif")
+alt_cerrado <- raster("./Mapas_base/dem_buff.tif")
 
 
 # PRECISA passar para WGS -- precisa estar em latlong
-alt_cerrado <- projectRaster(alt_cerrado, crs="+proj=longlat +datum=WGS84 +towgs84=0,0,0")
-alt_cerrado
+alt_cerrado <- projectRaster(alt_cerrado, crs = "+proj=longlat +datum=WGS84 +towgs84=0,0,0")
+#alt_cerrado
 
-plot(alt_cerrado)
-
-
-
+#plot(alt_cerrado)
 # carrega shape estados - Cerrado
 # tenho que separar os dados de altitude por regiao do Brasil, para aplicar a formula de Mello et al 2013
 
-states <- readOGR('./br_unidades_da_federacao_IBGE', "UF_BSF")
+states <- readOGR('./Mapas_base', "UF_BSF")
 
 # passa para WGS
 states <- spTransform(states,crs(alt_cerrado))
 
-plot(states, add=T)
+plot(states, add = T)
 
 
 # separa por regiao
@@ -46,15 +42,15 @@ plot(SE)
 
 # norte
 N <- states[states$NM_REGIAO == "NORTE",]
-plot(N, add=T)
+plot(N, add = T)
 
 # nordeste
-NE<- states[states$NM_REGIAO=="NORDESTE",]
-plot(NE, add=T)
+NE <- states[states$NM_REGIAO == "NORDESTE",]
+plot(NE, add = T)
 
 # centro-oeste
-CO <- states[states$NM_REGIAO=="CENTRO-OESTE",]
-plot(CO, add=T)
+CO <- states[states$NM_REGIAO == "CENTRO-OESTE",]
+plot(CO, add = T)
 
 ##N?o tem SUL
 
@@ -63,23 +59,23 @@ plot(CO, add=T)
 #alt_cerrado # raster de altitude do Cerrado
 
 # sudeste
-alt_SE <- crop (alt_cerrado, SE) # coloca no extend do SE
-alt_SE <- mask (alt_SE, SE) # coloca NA fora dos estados do SE
+alt_SE <- crop(alt_cerrado, SE) # coloca no extend do SE
+alt_SE <- mask(alt_SE, SE) # coloca NA fora dos estados do SE
 #plot(alt_SE)
 
 # norte
-alt_N <- crop (alt_cerrado, N) # coloca no extend do SE
-alt_N <- mask (alt_N, N) # coloca NA fora dos estados do SE
+alt_N <- crop(alt_cerrado, N) # coloca no extend do SE
+alt_N <- mask(alt_N, N) # coloca NA fora dos estados do SE
 #plot(alt_N)
 
 # nordeste
-alt_NE <- crop (alt_cerrado, NE) # coloca no extend do SE
-alt_NE <- mask (alt_NE, NE) # coloca NA fora dos estados do SE
+alt_NE <- crop(alt_cerrado, NE) # coloca no extend do SE
+alt_NE <- mask(alt_NE, NE) # coloca NA fora dos estados do SE
 #plot(alt_NE)
 
 # centro-oeste
-alt_CO <- crop (alt_cerrado, CO) # coloca no extend do SE
-alt_CO <- mask (alt_CO, CO) # coloca NA fora dos estados do SE
+alt_CO <- crop(alt_cerrado, CO) # coloca no extend do SE
+alt_CO <- mask(alt_CO, CO) # coloca NA fora dos estados do SE
 #plot(alt_CO)
 
 
@@ -165,10 +161,10 @@ head(xyz_CO)
 nrow(xyz_CO) #72150
 
 # carrega tabela com formulas
-table <- read.table("./erosividade da chuva__atualizar com nova ref/Dados_base/erosividade da chuva_enxuto/formulas_erosividade.txt", header = T)
+table <- read.table("./tabela/formulas_erosividade.txt", header = T)
 #table # tabela com formulas
 
-head(table)
+#head(table)
 
 
 
@@ -178,11 +174,11 @@ head(table)
 ### sudeste
 
 # define a regiao que vai usar
-head(table)
+#head(table)
 val <- table$Southeast
 # transforma em matriz
 val <- as.matrix(val)
-head(val)
+#head(val)
 
 
 
@@ -244,7 +240,7 @@ fun_SE <- function(A, LA, LO){
     r_LO_qua + r_LOxA + r_LAxLO + r_LO_quaxA + r_LO_quadxA_qua +
     r_LO_quaxLA_qua + r_LA_quaxLO_tres
 
-  return (valor)
+  return(valor)
 
 } # fecha a funcao
 
@@ -254,13 +250,13 @@ fun_SE <- function(A, LA, LO){
 
 # aqui define os argumentos
 # mudar a regiao
-head(xyz_SE)
+#head(xyz_SE)
 A_SE <- xyz_SE[,3] # altitude
 LA_SE <- xyz_SE[,2] # latitude
 LO_SE <- xyz_SE[,1] # longitude
 
 # roda a funcao
-erod <- fun_SE(A=A_SE, LA_SE, LO_SE)
+erod <- fun_SE(A = A_SE, LA_SE, LO_SE)
 
 #erod
 #length(erod) #1337560
@@ -275,19 +271,19 @@ erod <- fun_SE(A=A_SE, LA_SE, LO_SE)
 # mudar aqui a regiao
 xy <- xyz_SE[,-3]
 #xy
-head(xy)
+#head(xy)
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
 #xy_erod
-head(xy_erod)
+#head(xy_erod)
 
 # cria raster
 # mudar o nome do raster
 r_erod_SE <- rasterFromXYZ(xy_erod)
 #r_erod_SE # 1337560
 
-plot(r_erod_SE)
+#plot(r_erod_SE)
 
 
 
@@ -296,19 +292,19 @@ plot(r_erod_SE)
 ### norte
 
 # define a regiao que vai usar
-head(table)
+#head(table)
 val <- table$North.Midwest
 #val
 
 # transforma em matriz
 val <- as.matrix(val)
-head(val)
+#head(val)
 
 
 
 # constroi funcao
 # mudar o nome da funcao
-fun_N <- function (A, LA, LO){
+fun_N <- function(A, LA, LO){
 
   # tem que tirar os coeficientes que forem NA
 
@@ -375,7 +371,7 @@ fun_N <- function (A, LA, LO){
     r_LO_quaxLA_qua +
     r_LA_quaxLO_tres
 
-  return (valor)
+  return(valor)
 
 } # fecha a funcao
 
@@ -390,7 +386,7 @@ LA_N <- xyz_N[,2] # latitude
 LO_N <- xyz_N[,1] # longitude
 
 # roda a funcao
-erod <- fun_N(A=A_N, LA_N, LO_N)
+erod <- fun_N(A = A_N, LA_N, LO_N)
 
 #erod
 #length(erod) #1628433
@@ -438,7 +434,7 @@ val <- as.matrix(val)
 
 # constroi funcao
 # mudar o nome da funcao
-fun_NE <- function (A, LA, LO){
+fun_NE <- function(A, LA, LO){
 
   # tem que tirar os coeficientes que forem NA
 
@@ -494,7 +490,7 @@ fun_NE <- function (A, LA, LO){
   intercept + r_A + r_LO + r_A_qua + r_LA_qua +
     r_LOxA + r_LO_quaxA + r_LO_quaxLA_qua + r_LA_quaxLO_tres
 
-  return (valor)
+  return(valor)
 
 } # fecha a funcao
 
@@ -503,13 +499,13 @@ fun_NE <- function (A, LA, LO){
 # cria argumentos para a funcao
 
 # aqui define a regiao
-head(xyz_NE)
+#head(xyz_NE)
 A_NE <- xyz_NE[,3] # altitude
 LA_NE <- xyz_NE[,2] # latitude
 LO_NE <- xyz_NE[,1] # longitude
 
 # roda a funcao
-erod <- fun_NE(A=A_NE, LA_NE, LO_NE)
+erod <- fun_NE(A = A_NE, LA_NE, LO_NE)
 
 #length(erod) #1175675
 
@@ -520,18 +516,18 @@ erod <- fun_NE(A=A_NE, LA_NE, LO_NE)
 # pega xy
 # mudar aqui a regiao
 xy <- xyz_NE[,-3]
-head(xy)
+#head(xy)
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
-head(xy_erod)
+#head(xy_erod)
 
 # cria raster
 # mudar o nome do raster
 r_erod_NE <- rasterFromXYZ(xy_erod)
 #r_erod_NE # 1175675
 
-plot(r_erod_NE)
+#plot(r_erod_NE)
 
 
 
@@ -539,7 +535,7 @@ plot(r_erod_NE)
 ### centro-oeste
 
 # define a regiao que vai usar
-head(table)
+#head(table)
 val <- table$North.Midwest
 
 # transforma em matriz
@@ -550,7 +546,7 @@ val <- as.matrix(val)
 
 # constroi funcao
 # mudar o nome da funcao
-fun_CO <- function (A, LA, LO){
+fun_CO <- function(A, LA, LO){
 
   # tem que tirar os coeficientes que forem NA
 
@@ -617,7 +613,7 @@ fun_CO <- function (A, LA, LO){
     r_LO_quaxLA_qua +
     r_LA_quaxLO_tres
 
-  return (valor)
+  return(valor)
 
 } # fecha a funcao
 
@@ -632,51 +628,52 @@ LA_CO <- xyz_CO[,2] # latitude
 LO_CO <- xyz_CO[,1] # longitude
 
 # roda a funcao
-erod <- fun_CO(A=A_CO, LA_CO, LO_CO)
+erod <- fun_CO(A = A_CO, LA_CO, LO_CO)
 
 # faz o raster da erodibilidade
 
 # pega xy
 # mudar aqui a regiao
 xy <- xyz_CO[,-3]
-head(xy)
+#head(xy)
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
-head(xy_erod)
+#head(xy_erod)
 
 # cria raster
 # mudar o nome do raster
 r_erod_CO <- rasterFromXYZ(xy_erod)
 #r_erod_CO # 2514900
 
-plot(r_erod_CO)
+#plot(r_erod_CO)
 
 
 # junta os raster de erodibilidade
 
-r_erod_cerr <- merge (r_erod_SE, r_erod_N, r_erod_NE, r_erod_CO)
+r_erod_cerr <- merge(r_erod_SE, r_erod_N, r_erod_NE, r_erod_CO)
 
 #r_erod_cerr #5718582
-plot(r_erod_cerr)
+#plot(r_erod_cerr)
 
-#alt_cerrado #6461380 # Parece que o numero de cells e diferente por causa do extend
+#alt_cerrado #6461380 # Parece que o numero de cells e diferente por causa do extend  '
 #plot(alt_cerrado)
 
 ##ver o que acontece at? aqui sem transformar de novo (tentar transformar no arcgis)
 
 #Coloca no extent de LULC
-tc <- raster("./landuse_landcover/MapBiomas/MapBiomas3.0/LULC_BSFInt.tif")
-plot(tc)
+tc <- raster("./Mapas_base/LULC_bufferProj.tif")
+#plot(tc)
 #extent(r_erod_cerr)<-extent(tc) #tc ? o raster de LULC
 
 ##Projetar pra WGS
 proj4string(r_erod_cerr) <- CRS("+proj=longlat +datum=WGS84 +towgs84=0,0,0")
 #crs(r_erod_cerr) <- "+proj=longlat +datum=WGS84 +towgs84=0,0,0"
 #erosiv <- alignExtent(r_erod_cerr, tc)
-erosiv2 <- projectRaster(r_erod_cerr, tc, method="bilinear")
+erosiv2 <- projectRaster(r_erod_cerr, tc, method = "bilinear")
 
 
 # exporta raster
-writeRaster(x=erosiv2, "./erosividade da chuva/erosividade_WGS2", format="GTiff", overwrite=T)
+
+writeRaster(x = erosiv2, "./Output/erosividade_WGS2", format = "GTiff", overwrite = T)
 
