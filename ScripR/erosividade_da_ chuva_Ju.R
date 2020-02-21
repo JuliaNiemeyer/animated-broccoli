@@ -21,7 +21,7 @@ alt_cerrado <- raster("./Mapas_base/dem_buff.tif")
 alt_cerrado <- projectRaster(alt_cerrado, crs = "+proj=longlat +datum=WGS84 +towgs84=0,0,0")
 #alt_cerrado
 
-#plot(alt_cerrado)
+##plot(alt_cerrado)
 # carrega shape estados - Cerrado
 # tenho que separar os dados de altitude por regiao do Brasil, para aplicar a formula de Mello et al 2013
 
@@ -30,27 +30,27 @@ states <- readOGR('./Mapas_base', "UF_BSF")
 # passa para WGS
 states <- spTransform(states,crs(alt_cerrado))
 
-plot(states, add = T)
+##plot(states, add = T)
 
 
 # separa por regiao
 
 # sudeste
 SE <- states[states$NM_REGIAO == "SUDESTE",]
-plot(SE)
+##plot(SE)
 #Project
 
 # norte
 N <- states[states$NM_REGIAO == "NORTE",]
-plot(N, add = T)
+#plot(N, add = T)
 
 # nordeste
 NE <- states[states$NM_REGIAO == "NORDESTE",]
-plot(NE, add = T)
+##plot(NE, add = T)
 
 # centro-oeste
 CO <- states[states$NM_REGIAO == "CENTRO-OESTE",]
-plot(CO, add = T)
+##plot(CO, add = T)
 
 ##N?o tem SUL
 
@@ -61,22 +61,22 @@ plot(CO, add = T)
 # sudeste
 alt_SE <- crop(alt_cerrado, SE) # coloca no extend do SE
 alt_SE <- mask(alt_SE, SE) # coloca NA fora dos estados do SE
-#plot(alt_SE)
+###plot(alt_SE)
 
 # norte
 alt_N <- crop(alt_cerrado, N) # coloca no extend do SE
 alt_N <- mask(alt_N, N) # coloca NA fora dos estados do SE
-#plot(alt_N)
+###plot(alt_N)
 
 # nordeste
 alt_NE <- crop(alt_cerrado, NE) # coloca no extend do SE
 alt_NE <- mask(alt_NE, NE) # coloca NA fora dos estados do SE
-#plot(alt_NE)
+##plot(alt_NE)
 
 # centro-oeste
 alt_CO <- crop(alt_cerrado, CO) # coloca no extend do SE
 alt_CO <- mask(alt_CO, CO) # coloca NA fora dos estados do SE
-#plot(alt_CO)
+##plot(alt_CO)
 
 
 
@@ -88,34 +88,34 @@ alt_CO <- mask(alt_CO, CO) # coloca NA fora dos estados do SE
 xy_SE <- coordinates(alt_SE)
 xy_SE <- as.matrix(xy_SE)
 #xy_SE
-nrow(xy_SE) # 404790
-#head(xy_SE)
+#nrow(xy_SE) # 404790
+##head(xy_SE)
 
 # extrai os valores altitude
 val_SE <- getValues(alt_SE)
 as.data.frame(val_SE)
 #table(val_SE)
-length(val_SE) # 404790
-#head(val_SE)
+#length(val_SE) # 404790
+##head(val_SE)
 
 
 # junta coord e altitude
 xyz_SE <- cbind(xy_SE, val_SE)
 xyz_SE  # objeto com x, y e altitude
 
-head(xyz_SE)
+##head(xyz_SE)
 
 
 # norte
 # extrai as coordenadas
 xy_N <- coordinates(alt_N)
 #xy_N
-nrow(xy_N)  ## 32076
+#nrow(xy_N)  ## 32076
 
 # extrai altitude
 val_N <- getValues(alt_N)
 as.data.frame(val_N)
-length(val_N) # 32076
+#length(val_N) # 32076
 
 # junta coord e altitude
 xyz_N <- cbind(xy_N, val_N)
@@ -128,43 +128,43 @@ tail(xyz_N)
 # extrai as coordenadas
 xy_NE <- coordinates(alt_NE)
 #xy_NE
-nrow(xy_NE) #  1030083
+#nrow(xy_NE) #  1030083
 
 # extrai altitude
 val_NE <- getValues(alt_NE)
 as.data.frame(val_NE)
-length(val_NE) #  1030083
+#length(val_NE) #  1030083
 
 # junta coord e altitude
 xyz_NE <- cbind(xy_NE, val_NE)
 #xyz_NE  # objeto com x, y e altitude
 
-head(xyz_NE)
-nrow(xyz_NE) #1030083
+#head(xyz_NE)
+#nrow(xyz_NE) #1030083
 
 
 # centro-oeste
 # extrai as coordenadas
 xy_CO <- coordinates(alt_CO)
-nrow(xy_CO) #72150
+#nrow(xy_CO) #72150
 
 # extrai altitude
 val_CO <- getValues(alt_CO)
 as.data.frame(val_CO)
-length(val_CO) # 72150
+#length(val_CO) # 72150
 
 # junta coord e altitude
 xyz_CO <- cbind(xy_CO, val_CO)
 #xyz_CO  # objeto com x, y e altitude
 
-head(xyz_CO)
-nrow(xyz_CO) #72150
+#head(xyz_CO)
+#nrow(xyz_CO) #72150
 
 # carrega tabela com formulas
-table <- read.table("./tabela/formulas_erosividade.txt", header = T)
+table <- read.table("./tabela/formulas_erosividade.txt", #header = T)
 #table # tabela com formulas
 
-#head(table)
+##head(table)
 
 
 
@@ -174,11 +174,11 @@ table <- read.table("./tabela/formulas_erosividade.txt", header = T)
 ### sudeste
 
 # define a regiao que vai usar
-#head(table)
+##head(table)
 val <- table$Southeast
 # transforma em matriz
 val <- as.matrix(val)
-#head(val)
+##head(val)
 
 
 
@@ -250,7 +250,7 @@ fun_SE <- function(A, LA, LO){
 
 # aqui define os argumentos
 # mudar a regiao
-#head(xyz_SE)
+##head(xyz_SE)
 A_SE <- xyz_SE[,3] # altitude
 LA_SE <- xyz_SE[,2] # latitude
 LO_SE <- xyz_SE[,1] # longitude
@@ -260,7 +260,7 @@ erod <- fun_SE(A = A_SE, LA_SE, LO_SE)
 
 #erod
 #length(erod) #1337560
-#plot(erod_SE)
+##plot(erod_SE)
 #unique(erod)
 
 
@@ -271,19 +271,19 @@ erod <- fun_SE(A = A_SE, LA_SE, LO_SE)
 # mudar aqui a regiao
 xy <- xyz_SE[,-3]
 #xy
-#head(xy)
+##head(xy)
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
 #xy_erod
-#head(xy_erod)
+##head(xy_erod)
 
 # cria raster
 # mudar o nome do raster
 r_erod_SE <- rasterFromXYZ(xy_erod)
 #r_erod_SE # 1337560
 
-#plot(r_erod_SE)
+##plot(r_erod_SE)
 
 
 
@@ -292,13 +292,13 @@ r_erod_SE <- rasterFromXYZ(xy_erod)
 ### norte
 
 # define a regiao que vai usar
-#head(table)
+##head(table)
 val <- table$North.Midwest
 #val
 
 # transforma em matriz
 val <- as.matrix(val)
-#head(val)
+##head(val)
 
 
 
@@ -380,7 +380,7 @@ fun_N <- function(A, LA, LO){
 # cria argumentos para a funcao
 
 # aqui define a regiao
-head(xyz_N)
+#head(xyz_N)
 A_N <- xyz_N[,3] # altitude
 LA_N <- xyz_N[,2] # latitude
 LO_N <- xyz_N[,1] # longitude
@@ -400,12 +400,12 @@ erod <- fun_N(A = A_N, LA_N, LO_N)
 # mudar aqui a regiao
 xy <- xyz_N[,-3]
 #xy
-head(xy)
+#head(xy)
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
 #xy_erod
-head(xy_erod)
+#head(xy_erod)
 
 # cria raster
 # mudar o nome do raster
@@ -413,7 +413,7 @@ r_erod_N <- rasterFromXYZ(xy_erod)
 #r_erod_N # 1337560
 
 
-plot(r_erod_N)
+##plot(r_erod_N)
 
 
 
@@ -422,7 +422,7 @@ plot(r_erod_N)
 ### nordeste
 
 # define a regiao que vai usar
-#head(table)
+##head(table)
 val <- table$Northeast
 #val
 
@@ -499,7 +499,7 @@ fun_NE <- function(A, LA, LO){
 # cria argumentos para a funcao
 
 # aqui define a regiao
-#head(xyz_NE)
+##head(xyz_NE)
 A_NE <- xyz_NE[,3] # altitude
 LA_NE <- xyz_NE[,2] # latitude
 LO_NE <- xyz_NE[,1] # longitude
@@ -516,18 +516,18 @@ erod <- fun_NE(A = A_NE, LA_NE, LO_NE)
 # pega xy
 # mudar aqui a regiao
 xy <- xyz_NE[,-3]
-#head(xy)
+##head(xy)
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
-#head(xy_erod)
+##head(xy_erod)
 
 # cria raster
 # mudar o nome do raster
 r_erod_NE <- rasterFromXYZ(xy_erod)
 #r_erod_NE # 1175675
 
-#plot(r_erod_NE)
+##plot(r_erod_NE)
 
 
 
@@ -535,7 +535,7 @@ r_erod_NE <- rasterFromXYZ(xy_erod)
 ### centro-oeste
 
 # define a regiao que vai usar
-#head(table)
+##head(table)
 val <- table$North.Midwest
 
 # transforma em matriz
@@ -622,7 +622,7 @@ fun_CO <- function(A, LA, LO){
 # cria argumentos para a funcao
 
 # aqui define a regiao
-head(xyz_CO)
+##head(xyz_CO)
 A_CO <- xyz_CO[,3] # altitude
 LA_CO <- xyz_CO[,2] # latitude
 LO_CO <- xyz_CO[,1] # longitude
@@ -635,18 +635,18 @@ erod <- fun_CO(A = A_CO, LA_CO, LO_CO)
 # pega xy
 # mudar aqui a regiao
 xy <- xyz_CO[,-3]
-#head(xy)
+##head(xy)
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
-#head(xy_erod)
+##head(xy_erod)
 
 # cria raster
 # mudar o nome do raster
 r_erod_CO <- rasterFromXYZ(xy_erod)
 #r_erod_CO # 2514900
 
-#plot(r_erod_CO)
+##plot(r_erod_CO)
 
 
 # junta os raster de erodibilidade
@@ -654,16 +654,16 @@ r_erod_CO <- rasterFromXYZ(xy_erod)
 r_erod_cerr <- merge(r_erod_SE, r_erod_N, r_erod_NE, r_erod_CO)
 
 #r_erod_cerr #5718582
-#plot(r_erod_cerr)
+##plot(r_erod_cerr)
 
 #alt_cerrado #6461380 # Parece que o numero de cells e diferente por causa do extend  '
-#plot(alt_cerrado)
+##plot(alt_cerrado)
 
 ##ver o que acontece at? aqui sem transformar de novo (tentar transformar no arcgis)
 
 #Coloca no extent de LULC
 tc <- raster("./Mapas_base/LULC_bufferProj.tif")
-#plot(tc)
+##plot(tc)
 #extent(r_erod_cerr)<-extent(tc) #tc ? o raster de LULC
 
 ##Projetar pra WGS
