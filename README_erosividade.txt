@@ -12,3 +12,5 @@ O objetivo para a disciplina é deixar o script e as pastas de forma reprodutív
 
 O output é um raster dataset, portanto não deve ser adicionado ao github. Apenas a tabela de equações e 
 os scripts devem ser monitorados.
+
+Por favor incluam a pasta "Mapas_base" recebida por email na pasta mestre. Nela contém os mapas para base pra rodar o script.
