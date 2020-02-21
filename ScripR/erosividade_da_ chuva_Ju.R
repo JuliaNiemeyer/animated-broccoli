@@ -2,7 +2,6 @@
 
 # aqui aplico a funcao da erosividade para cada regiao do cerrado
 
-#rm(list=ls())
 
 library(raster)
 library(maptools)
@@ -28,9 +27,9 @@ alt_cerrado <- projectRaster(alt_cerrado, crs = "+proj=longlat +datum=WGS84 +tow
 states <- readOGR('./Mapas_base', "UF_BSF")
 
 # passa para WGS
-states <- spTransform(states,crs(alt_cerrado))
+states <- spTransform(states, crs(alt_cerrado))
 
-##plot(states, add = T)
+##plot(states, add=T)
 
 
 # separa por regiao
@@ -93,7 +92,7 @@ xy_SE <- as.matrix(xy_SE)
 
 # extrai os valores altitude
 val_SE <- getValues(alt_SE)
-as.data.frame(val_SE)
+val_SE <- as.matrix(val_SE)
 #table(val_SE)
 #length(val_SE) # 404790
 ##head(val_SE)
@@ -101,7 +100,7 @@ as.data.frame(val_SE)
 
 # junta coord e altitude
 xyz_SE <- cbind(xy_SE, val_SE)
-xyz_SE  # objeto com x, y e altitude
+#xyz_SE  # objeto com x, y e altitude
 
 ##head(xyz_SE)
 
@@ -114,14 +113,14 @@ xy_N <- coordinates(alt_N)
 
 # extrai altitude
 val_N <- getValues(alt_N)
-as.data.frame(val_N)
+val_N <- as.matrix(val_N)
 #length(val_N) # 32076
 
 # junta coord e altitude
 xyz_N <- cbind(xy_N, val_N)
 #xyz_N  # objeto com x, y e altitude
 
-tail(xyz_N)
+#tail(xyz_N)
 
 
 # nordeste
@@ -132,7 +131,7 @@ xy_NE <- coordinates(alt_NE)
 
 # extrai altitude
 val_NE <- getValues(alt_NE)
-as.data.frame(val_NE)
+val_NE <- as.matrix(val_NE)
 #length(val_NE) #  1030083
 
 # junta coord e altitude
@@ -150,7 +149,7 @@ xy_CO <- coordinates(alt_CO)
 
 # extrai altitude
 val_CO <- getValues(alt_CO)
-as.data.frame(val_CO)
+val_CO <- as.matrix(val_CO)
 #length(val_CO) # 72150
 
 # junta coord e altitude
@@ -161,8 +160,8 @@ xyz_CO <- cbind(xy_CO, val_CO)
 #nrow(xyz_CO) #72150
 
 # carrega tabela com formulas
-table <- read.table("./tabela/formulas_erosividade.txt", #header = T)
-#table # tabela com formulas
+table <- read.table('./tabela/formulas_erosividade.txt', header = T)
+
 
 ##head(table)
 
@@ -404,7 +403,7 @@ xy <- xyz_N[,-3]
 
 # coloca o valor da erodibildiade
 xy_erod <- cbind(xy, erod)
-#xy_erod
+
 #head(xy_erod)
 
 # cria raster
